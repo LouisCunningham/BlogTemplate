@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import ArticleCard from '../components/ArticleCard.astro';
+import type { CollectionEntry } from 'astro:content';
+import SearchForm from '../components/SearchForm.astro';
+
+
+const allBlogArticles: CollectionEntry<'blog'>[] = (await getCollection('blog')).sort((a:CollectionEntry<'blog'>, b:CollectionEntry<'blog'>) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+---
+
+<!-- ============================================ --><!--                 Recent Posts                 --><!-- ============================================ -->
+<section style='margin-top:-7%;' id='blog-1347'>
+  <div class='cs-container'>
+    <div class='cs-content'>
+      <span class='cs-topper'>All Articles</span>
+      <h2 class='cs-title'>Directly from The Latest News and Articles</h2>
+      <p class='cs-text mb-4'>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
+        lobortis quam eu elit lobortis ultrices. Nulla ut accumsan lorem, sed
+        molestie justo. Praesent vehicula eleifend.
+      </p>
+      <SearchForm />
+    </div>
+
+    <ul class='cs-card-group'>
+      {
+        allBlogArticles.map((article) => (
+          <ArticleCard article={article} />
+        ))
+      }
+    </ul>
+  </div>
+  <div class='cs-bubbles' aria-hidden='true'></div>
+
+  <!-- Pagination -->
+  <div class='flex justify-between mt-10'>
+    <a
+      href='#'
+      class='inline-block bg-indigo-100 px-3 py-2 hover:bg-indigo-600 hover:text-white rounded-lg'
+    >
+      Previous
+    </a>
+    <a
+      href='#'
+      class='inline-block bg-indigo-100 px-3 py-2 hover:bg-indigo-600 hover:text-white rounded-lg'
+    >
+      Next
+    </a>
+  </div>
+</section>

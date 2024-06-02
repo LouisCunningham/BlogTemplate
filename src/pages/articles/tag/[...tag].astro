@@ -1,0 +1,46 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import ArticleCard from '../../../components/ArticleCard.astro';
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import { capitalize } from '../../../utils';
+
+const { tag } = Astro.params;
+
+if (tag === undefined) {
+  throw new Error('Tag is required');
+}
+
+const allBlogArticles: CollectionEntry<'blog'>[] = (
+  await getCollection('blog')
+).sort(
+  (a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
+    b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const tagArticles = allBlogArticles.filter((article) =>
+  article.data.tags.includes(tag)
+);
+---
+
+<MainLayout>
+  <section style='margin-top:-7%;' id='blog-1347'>
+    <div class='cs-container'>
+      <div class='cs-content'>
+        <a
+          href='/articles'
+          class='cs-button-5 mb-10'
+          aria-label='read more about us'
+        >
+          <span class='cs-button-text'>All Articles</span>
+        </a>
+        <h1 class="text-2xl pb-3">#{capitalize(tag)}</h1>
+      </div>
+
+      <ul class='cs-card-group'>
+        {tagArticles.map((article) => <ArticleCard article={article} />)}
+      </ul>
+    </div>
+    <div class='cs-bubbles' aria-hidden='true'></div>
+  </section>
+</MainLayout>

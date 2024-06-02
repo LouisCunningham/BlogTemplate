@@ -1,0 +1,102 @@
+---
+import '../css/style.css';
+import MainLayout from '../layouts/MainLayout.astro';
+import SearchForm from '../components/SearchForm.astro';
+import { HOMEPAGE_ARTICLE_LIMIT } from '../constants';
+import MostRecentArticle from '../components/MostRecentArticle.astro';
+
+
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import ArticleCard from '../components/ArticleCard.astro';
+
+
+const allBlogArticles: CollectionEntry<'blog'>[] = (
+  await getCollection('blog')
+).sort(
+  (a: CollectionEntry<'blog'>, b: CollectionEntry<'blog'>) =>
+    b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const mostRecentArticle: CollectionEntry<'blog'> = allBlogArticles[0];
+
+const otherArticles: CollectionEntry<'blog'>[] = allBlogArticles.slice(1);
+---
+
+<MainLayout>
+  <!-- ============================================ -->
+  <!--                    Hero                      -->
+  <!-- ============================================ -->
+
+  <section id='hero-856'>
+    <div class='cs-container'>
+      <div class='cs-content'>
+        <h1 class='cs-title'>Header For Blog</h1>
+        <p class='cs-text'>
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Temporibus
+          unde id saepe quo. Est, ea! Lorem, ipsum dolor sit amet consectetur
+          adipisicing elit. Id, provident? Lorem ipsum dolor sit amet
+          consectetur adipisicing.
+        </p>
+
+        <SearchForm />
+      </div>
+      <!--Hero Image-->
+      <picture class='cs-picture'>
+        <!--Mobile-->
+        <source media='(max-width: 600px)' srcset='/images/Designer (3).png' />
+        <!--Tablet-->
+        <source media='(min-width: 601px)' srcset='/images/Designer (3).png' />
+        <!--Desktop-->
+        <source media='(min-width: 1024px)' srcset='/images/Designer (3).png' />
+        <img
+          aria-hidden='true'
+          decoding='async'
+          src='/images/Designer (3).png'
+          alt='therapy'
+          width='550'
+          height='701'
+        />
+      </picture>
+    </div>
+  
+  </section>
+
+  <hr class='mt-4 mb-10' />
+  <!-- Top Grid -->
+  <div class='mt-10 grid grid-cols-1 gap-5 lg:grid-cols-2'>
+    <div class='flex items-center'>
+      
+
+      <div class='cs-content'>
+        <span class='cs-topper'>Article Of The Week</span>
+        <h2 class='cs-title'>Directly from The Latest News and Articles</h2>
+        <p class='cs-text'>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
+          lobortis quam eu elit lobortis ultrices. Nulla ut accumsan lorem, sed
+          molestie justo. Praesent vehicula eleifend.
+        </p>
+      </div>
+    </div>
+
+    <!-- Most Recent Article -->
+   <MostRecentArticle article={mostRecentArticle}/>
+  </div>
+
+  <!-- Main Grid -->
+ <div class="cs-container" id="blog-1347">
+  <div class="cs-content">
+    <div class='cs-card-group'>
+      {
+        otherArticles
+          .slice(0, HOMEPAGE_ARTICLE_LIMIT)
+          .map(article => (
+          <ArticleCard article={article} />
+          ))
+      } 
+     
+    
+    </div>
+  </div>
+ </div>
+</MainLayout>
